@@ -1,0 +1,24 @@
+{
+  "name": "iterables",
+  "version": "0.1.0",
+  "description": "Extensible lazy iterator pattern with predefined extensions and generic algorithms",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests"
+  },
+  "keywords": [
+    "iterator",
+    "iterable",
+    "enumerator",
+    "lazy"
+  ],
+  "author": "zs-zs <zsolt.zsigmondi@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^3.9.3"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "mocha": "^2.2.5"
+  }
+}
