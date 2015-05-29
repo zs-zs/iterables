@@ -4,7 +4,8 @@
   "description": "Extensible lazy iterator pattern with predefined extensions and generic algorithms",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests"
+    "test": "mocha tests",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -u bdd -R spec tests"
   },
   "keywords": [
     "iterator",
