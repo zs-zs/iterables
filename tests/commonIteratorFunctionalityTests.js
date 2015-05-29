@@ -212,6 +212,152 @@ module.exports.testCommonBehaviour = function testCommonBehaviour(createContext)
 		});
 	});
 
+	describe('#skipWhile', function() {
+		var skipWhileIterator;
+
+		beforeEach(function() {
+			skipWhileIterator = ctx.numberSequenceIterator.skipWhile(function(number) {
+				return number < 10;
+			});
+		});
+
+		it('should return a new Iterator', function() {
+			expect(skipWhileIterator).to.be.not.equal(ctx.numberSequenceIterator);
+			expect(skipWhileIterator).to.be.instanceOf(Iterator);
+		});
+
+		it('should return an iterator which bypasses elements from its source as long as the specified condition is true', function() {
+			var item10 = skipWhileIterator.getNext();
+			expect(item10).to.be.eql({hasValue: true, value: 10});
+		});
+
+		it('should return an iterator which returns all elements from its source after the specified condition is not true', function() {
+			var shortSkipWhileIterator = skipWhileIterator.where(function(number) {
+				return number < 13;
+			});
+
+			var item10 = shortSkipWhileIterator.getNext();
+			expect(item10).to.be.eql({hasValue: true, value: 10});
+			var item11 = shortSkipWhileIterator.getNext();
+			expect(item11).to.be.eql({hasValue: true, value: 11});
+			var item12 = shortSkipWhileIterator.getNext();
+			expect(item12).to.be.eql({hasValue: true, value: 12});
+			var endOfIteration = shortSkipWhileIterator.getNext();
+			expect(endOfIteration.hasValue).to.be.false;
+		});
+
+		it('should not bypass elements from its source after the specified condition is not true', function() {
+			var iterator = ctx.numberSequenceIterator.skipWhile(function(number) {
+				return number % 2 === 1;
+			});
+			var item2 = iterator.getNext();
+			expect(item2).to.be.eql({hasValue: true, value: 2});
+			var item3 = iterator.getNext();
+			expect(item3).to.be.eql({hasValue: true, value: 3});
+			var item4 = iterator.getNext();
+			expect(item4).to.be.eql({hasValue: true, value: 4});
+			var item5 = iterator.getNext();
+			expect(item5).to.be.eql({hasValue: true, value: 5});
+		});
+	});
+
+	describe('#skip', function() {
+		var skipIterator;
+
+		beforeEach(function() {
+			skipIterator = ctx.numberSequenceIterator.skip(2);
+		});
+
+		it('should return a new Iterator', function() {
+			expect(skipIterator).to.be.not.equal(ctx.numberSequenceIterator);
+			expect(skipIterator).to.be.instanceOf(Iterator);
+		});
+
+		it('should return an iterator which bypasses given number of elements from its source', function() {
+			var item3 = skipIterator.getNext();
+			expect(item3).to.be.eql({hasValue: true, value: 3});
+		});
+
+		it('should return an iterator which returns all elements from its source after the bypassed elements', function() {
+			var shortSkipIterator = skipIterator.where(function(number) {
+				return number < 5;
+			});
+
+			var item3 = shortSkipIterator.getNext();
+			expect(item3).to.be.eql({hasValue: true, value: 3});
+			var item4 = shortSkipIterator.getNext();
+			expect(item4).to.be.eql({hasValue: true, value: 4});
+			var endOfIteration = shortSkipIterator.getNext();
+			expect(endOfIteration.hasValue).to.be.false;
+		});
+	});
+
+	describe('#takeWhile', function() {
+		var takeWhileIterator;
+
+		beforeEach(function() {
+			takeWhileIterator = ctx.numberSequenceIterator.takeWhile(function(number) {
+				return number < 3;
+			});
+		});
+
+		it('should return a new Iterator', function() {
+			expect(takeWhileIterator).to.be.not.equal(ctx.numberSequenceIterator);
+			expect(takeWhileIterator).to.be.instanceOf(Iterator);
+		});
+
+		it('should return an iterator which returns elements from its source as long as the specified condition is true', function() {
+			var item1 = takeWhileIterator.getNext();
+			expect(item1).to.be.eql({hasValue: true, value: 1});
+			var item2 = takeWhileIterator.getNext();
+			expect(item2).to.be.eql({hasValue: true, value: 2});
+			var endOfIteration = takeWhileIterator.getNext();
+			expect(endOfIteration.hasValue).to.be.false;
+		});
+
+		it('should return an iterator which ends after the specified condition is not true', function() {
+			var emptyIterator = takeWhileIterator.takeWhile(function() {
+				return false;
+			});
+			var endOfIteration = emptyIterator.getNext();
+			expect(endOfIteration.hasValue).to.be.false;
+
+			endOfIteration = emptyIterator.getNext();
+			expect(endOfIteration.hasValue).to.be.false;
+		});
+	});
+
+	describe('#take', function() {
+		var takeIterator;
+
+		beforeEach(function() {
+			takeIterator = ctx.numberSequenceIterator.take(2);
+		});
+
+		it('should return a new Iterator', function() {
+			expect(takeIterator).to.be.not.equal(ctx.numberSequenceIterator);
+			expect(takeIterator).to.be.instanceOf(Iterator);
+		});
+
+		it('should return an iterator which returns given number of elements from the beginning of its source', function() {
+			var item3 = takeIterator.getNext();
+			expect(item3).to.be.eql({hasValue: true, value: 1});
+			var item4 = takeIterator.getNext();
+			expect(item4).to.be.eql({hasValue: true, value: 2});
+			var endOfIteration = takeIterator.getNext();
+			expect(endOfIteration.hasValue).to.be.false;
+		});
+
+		it('should return an iterator which ends after the given numer of elements returned from its input', function() {
+			var shortTakeIterator = takeIterator.take(0);
+
+			var endOfIteration = shortTakeIterator.getNext();
+			expect(endOfIteration.hasValue).to.be.false;
+			endOfIteration = shortTakeIterator.getNext();
+			expect(endOfIteration.hasValue).to.be.false;
+		});
+	});
+
 	describe('#pop', function() {
 		it('should return the next value of the iteration', function() {
 			var next = ctx.numberSequenceIterator.pop();

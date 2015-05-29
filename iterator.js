@@ -90,6 +90,53 @@ Iterator.prototype.filterValues = function filterValues(values) {
 	});
 };
 
+Iterator.prototype.skipWhile = function skipWhile(predicate) {
+	return this.pipe(function() {
+		var item, hasAlreadySkipped = false;
+		return function getNext() {
+			if(!hasAlreadySkipped) {
+				while((item = this.sourceIterator.getNext()).hasValue && predicate(item.value)) {}
+				hasAlreadySkipped = true;
+				return item;
+			}
+
+			while((item = this.sourceIterator.getNext()).hasValue) {
+				return item;
+			}
+			return this.sourceIterator.endOfIteration;
+		};
+	});
+};
+
+Iterator.prototype.skip = function skip(numberToSkip) {
+	var skippedItems = 0;
+	return this.skipWhile(function() {
+		return skippedItems++ < numberToSkip;
+	});
+};
+
+Iterator.prototype.takeWhile = function takeWhile(predicate) {
+	return this.pipe(function() {
+		var item, hasAlreadyTaken = false;
+		return function getNext() {
+			if(!hasAlreadyTaken) {
+				while((item = this.sourceIterator.getNext()).hasValue && predicate(item.value)) {
+					return item;
+				}
+				hasAlreadyTaken = true;
+			}
+			return this.sourceIterator.endOfIteration;
+		};
+	});
+};
+
+Iterator.prototype.take = function(numberToTake) {
+	var taken = 0;
+	return this.takeWhile(function() {
+		return taken++ < numberToTake;
+	});
+};
+
 Iterator.prototype.pop = function() {
 	var item = this.getNext();
 	return item.hasValue ? item.value : undefined;

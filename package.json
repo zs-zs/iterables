@@ -1,6 +1,6 @@
 {
   "name": "iterables",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Extensible lazy iterator pattern with predefined extensions and generic algorithms",
   "main": "index.js",
   "scripts": {
