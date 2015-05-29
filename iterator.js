@@ -15,14 +15,14 @@ Iterator.endOfIteration = {
 
 Iterator.prototype.endOfIteration = Iterator.endOfIteration;
 
-Iterator.prototype.pipe = function(getNextFactory) {
+Iterator.prototype.pipe = function pipe(getNextFactory) {
 	var targetIterator = this.clone();
 	targetIterator.sourceIterator = this.clone();
 	targetIterator.getNext = getNextFactory.call(targetIterator);
 	return targetIterator;
 };
 
-Iterator.prototype.clone = function() {
+Iterator.prototype.clone = function clone() {
 	var SameIterator = this.constructor;
 	var cloneInstance = Object.create(SameIterator.prototype);
 	for (var propertyName in this) {
@@ -36,7 +36,7 @@ Iterator.prototype.clone = function() {
 	return cloneInstance;
 };
 
-Iterator.prototype.where = function where (predicate) {
+Iterator.prototype.where = function where(predicate) {
 	return this.pipe(function() {
 		var item;
 		return function getNext() {
@@ -75,13 +75,13 @@ Iterator.prototype.nth = function nth(index) {
 	return this.at(index).first();
 };
 
-Iterator.prototype.filter = function(values) {
+Iterator.prototype.filter = function filter(values) {
 	return this.where(function(item) {
 		return _.contains(values, item);
 	});
 };
 
-Iterator.prototype.filterValues = function(values) {
+Iterator.prototype.filterValues = function filterValues(values) {
 	return this.where(function(item) {
 		return _.any(values, function(v) {
 			//Performs a deep value comparison instead of '==='
@@ -171,7 +171,7 @@ Iterator.prototype.select = function select(getItem) {
 	});
 };
 
-Iterator.prototype.selectMany = function selectMany (getIterable) {
+Iterator.prototype.selectMany = function selectMany(getIterable) {
 	return this.pipe(function() {
 		var activeSourceItem, iterable;
 
