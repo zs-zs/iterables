@@ -11,6 +11,7 @@
         "yoda": 0,
         "semi": 2,
         "no-unused-vars": [1, {"args":"none"}],
+        "no-sequences": 0,
         "quotes": [2, "single"],
         "no-use-before-define": 2,
         "indent": [2, "tab"],
